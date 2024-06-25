@@ -1,0 +1,30 @@
+{
+  "name": "Example dev container",
+
+  "dockerComposeFile": ["./docker-compose.yml"],
+  "service": "node",
+  "workspaceFolder": "/workspace",
+
+  "customizations": {
+    "vscode": {
+      // *default* container specific settings.json values on container create
+      "settings": {
+        "editor.formatOnSave": true
+      },
+
+      // list of extensions to be installed when the container is created
+      "extensions": [
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "EditorConfig.EditorConfig",
+        "Prisma.prisma"
+      ]
+    }
+  },
+
+  // list of ports inside the container available locally
+  "forwardPorts": [3000, "mysql:3306", "prisma:5555"],
+
+  // comment out connect as root instead cf. https://aka.ms/vscode-remote/containers/non-root
+  "remoteUser": "node"
+}

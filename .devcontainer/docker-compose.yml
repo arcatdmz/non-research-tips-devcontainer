@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+  mysql:
+    environment:
+      MYSQL_DATABASE: prisma
+      MYSQL_ROOT_PASSWORD: prisma
+    image: mysql:8
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d
+      - mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+  prisma:
+    build:
+      context: ../prisma
+      dockerfile: ./Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+    links:
+      - mysql
+    volumes:
+      - ../prisma/:/app/prisma
+  node:
+    build:
+      context: ../
+      dockerfile: ./.devcontainer/Dockerfile
+    command: sleep infinity
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ../:/workspace
+
+volumes:
+  mysql:
